@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>汇智科创社 · 用代码点亮青春</title>
+<meta name="description" content="汇智科创社——中职计算机爱好者的科技社团：编程、设计、剪辑、网络、技能大赛，一起用热爱编译青春！">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+/* ============ 基础变量 ============ */
+:root{
+  --bg:#060a1c;
+  --bg-2:#0b1136;
+  --bg-3:#111a4d;
+  --cyan:#22e6ff;
+  --blue:#4f8dff;
+  --purple:#9b6bff;
+  --pink:#ff5db8;
+  --gold:#ffd166;
+  --text:#e9edff;
+  --muted:#99a4d4;
+  --glass:rgba(255,255,255,.055);
+  --glass-border:rgba(160,190,255,.16);
+  --grad-main:linear-gradient(120deg,#22e6ff 0%,#6a8dff 45%,#b06bff 70%,#ff5db8 100%);
+  --grad-cool:linear-gradient(120deg,#22e6ff,#9b6bff);
+  --font-fun:'ZCOOL KuaiLe','Microsoft YaHei','PingFang SC',sans-serif;
+  --font-tech:'Orbitron','Microsoft YaHei',sans-serif;
+  --font-body:'Microsoft YaHei','PingFang SC','Hiragino Sans GB',sans-serif;
+  --radius:18px;
+  --shadow-glow:0 0 28px rgba(90,140,255,.28);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  color:var(--text);
+  background:var(--bg);
+  overflow-x:hidden;
+  line-height:1.7;
+}
+/* 全局科技背景：网格 + 光晕 */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(900px 500px at 80% -5%,rgba(155,107,255,.22),transparent 60%),
+    radial-gradient(800px 520px at 5% 20%,rgba(34,230,255,.14),transparent 60%),
+    radial-gradient(700px 600px at 90% 80%,rgba(255,93,184,.10),transparent 60%),
+    linear-gradient(180deg,#060a1c 0%,#080e28 45%,#060a1c 100%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(120,160,255,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(120,160,255,.055) 1px,transparent 1px);
+  background-size:46px 46px;
+  mask-image:radial-gradient(ellipse 90% 80% at 50% 0%,#000 30%,transparent 80%);
+}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none}
+::selection{background:rgba(155,107,255,.45)}
+/* 滚动条 */
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#080e28}
+::-webkit-scrollbar-thumb{background:linear-gradient(#22e6ff,#9b6bff);border-radius:8px}
+
+/* ============ 飘落花瓣 / 二进制粒子 ============ */
+#petals{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.petal{position:absolute;top:-40px;opacity:.8;animation:fall linear forwards;font-size:15px}
+@keyframes fall{
+  0%{transform:translateY(-40px) translateX(0) rotate(0)}
+  100%{transform:translateY(105vh) translateX(140px) rotate(360deg)}
+}
+
+/* ============ 导航 ============ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 5vw;
+  transition:.35s;
+}
+.nav.scrolled{
+  background:rgba(8,12,34,.82);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--glass-border);
+  box-shadow:0 8px 30px rgba(0,0,0,.35);
+}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-fun);font-size:22px}
+.logo .logo-icon{
+  width:40px;height:40px;display:grid;place-items:center;border-radius:12px;
+  background:var(--grad-main);font-size:20px;
+  box-shadow:0 0 18px rgba(120,120,255,.55);
+  animation:logoPulse 3s infinite;
+}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 14px rgba(34,230,255,.5)}50%{box-shadow:0 0 26px rgba(255,93,184,.65)}}
+.logo small{display:block;font-family:var(--font-tech);font-size:9px;letter-spacing:2px;color:var(--cyan);line-height:1}
+.nav-links{display:flex;gap:6px;list-style:none}
+.nav-links a{
+  padding:8px 14px;border-radius:999px;font-size:14.5px;color:var(--muted);
+  transition:.25s;position:relative;
+}
+.nav-links a:hover{color:#fff;background:rgba(120,140,255,.14)}
+.nav-cta{
+  padding:9px 20px;border-radius:999px;font-size:14px;font-weight:bold;color:#041026;
+  background:var(--grad-main);box-shadow:var(--shadow-glow);transition:.25s;
+}
+.nav-cta:hover{transform:translateY(-2px) scale(1.03)}
+.nav-toggle{display:none;background:none;color:#fff;font-size:26px}
+
+/* ============ 通用版块 ============ */
+section{position:relative;z-index:2;padding:96px 5vw}
+.sec-head{text-align:center;max-width:760px;margin:0 auto 56px}
+.sec-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-tech);font-size:12px;letter-spacing:3px;
+  color:var(--cyan);border:1px solid rgba(34,230,255,.35);
+  padding:6px 16px;border-radius:999px;margin-bottom:16px;
+  background:rgba(34,230,255,.06);
+}
+.sec-title{
+  font-family:var(--font-fun);font-size:clamp(28px,4vw,42px);
+  background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:12px;
+}
+.sec-desc{color:var(--muted);font-size:15.5px}
+
+/* 滚动进入动画 */
+.reveal{opacity:0;transform:translateY(38px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ============ 首页 Hero ============ */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding-top:130px;
+}
+#heroCanvas{position:absolute;inset:0;z-index:0}
+.hero-inner{
+  position:relative;z-index:3;display:grid;grid-template-columns:1.15fr .85fr;
+  gap:48px;align-items:center;width:100%;max-width:1240px;margin:0 auto;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,93,184,.12);border:1px solid rgba(255,93,184,.4);
+  color:#ffb0da;padding:7px 18px;border-radius:999px;font-size:13.5px;margin-bottom:24px;
+  animation:bob 2.6s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.hero h1{
+  font-family:var(--font-fun);font-size:clamp(46px,7.5vw,86px);line-height:1.1;
+}
+.hero h1 .grad{background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 22px rgba(120,120,255,.45))}
+.hero-en{font-family:var(--font-tech);letter-spacing:6px;color:var(--cyan);font-size:clamp(11px,1.4vw,15px);margin:10px 0 22px}
+.typing{
+  font-size:clamp(16px,2.1vw,21px);color:#cfd8ff;min-height:64px;margin-bottom:32px;
+}
+.typing .cursor{display:inline-block;width:3px;height:1.1em;background:var(--cyan);
+  animation:blink 1s infinite;vertical-align:-3px;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:44px}
+.btn{
+  padding:14px 30px;border-radius:999px;font-size:15.5px;font-weight:bold;transition:.25s;display:inline-flex;gap:8px;align-items:center;
+}
+.btn-primary{background:var(--grad-main);color:#041026;box-shadow:var(--shadow-glow)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 38px rgba(155,107,255,.55)}
+.btn-ghost{background:rgba(255,255,255,.06);color:#fff;border:1px solid var(--glass-border)}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-3px)}
+.hero-stats{display:flex;gap:34px;flex-wrap:wrap}
+.stat .num{font-family:var(--font-tech);font-size:30px;font-weight:900;
+  background:var(--grad-cool);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .label{font-size:13px;color:var(--muted)}
+/* 右侧吉祥物 */
+.hero-visual{position:relative;display:flex;justify-content:center}
+.mascot-ring{
+  position:relative;width:min(400px,82vw);aspect-ratio:1;border-radius:50%;
+  background:conic-gradient(from 120deg,#22e6ff,#9b6bff,#ff5db8,#22e6ff);
+  padding:4px;animation:spin 12s linear infinite;
+  filter:drop-shadow(0 0 40px rgba(120,120,255,.45));
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mascot-ring .inner{
+  width:100%;height:100%;border-radius:50%;overflow:hidden;background:#0a1030;
+  display:flex;align-items:flex-end;justify-content:center;
+  animation:spin 12s linear infinite reverse;
+}
+.mascot-ring .inner img{width:100%;height:100%;object-fit:cover}
+.speech-bubble{
+  position:absolute;top:6%;right:-6%;
+  background:#fff;color:#25305e;font-size:14px;font-weight:bold;
+  padding:12px 18px;border-radius:18px 18px 18px 4px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  animation:bob 2.8s ease-in-out infinite;
+  white-space:nowrap;
+}
+.speech-bubble b{color:var(--pink)}
+.float-chip{
+  position:absolute;padding:10px 16px;border-radius:14px;font-size:13.5px;font-weight:bold;
+  background:rgba(10,16,48,.78);border:1px solid var(--glass-border);backdrop-filter:blur(8px);
+  animation:bob 3.4s ease-in-out infinite;
+}
+.fc-1{left:-8%;top:22%;color:var(--cyan);box-shadow:0 0 22px rgba(34,230,255,.25)}
+.fc-2{left:-4%;bottom:14%;color:var(--gold);animation-delay:.8s}
+.fc-3{right:-10%;bottom:6%;color:var(--pink);animation-delay:1.4s}
+
+/* ============ 跑马灯 ============ */
+.ticker{
+  position:relative;z-index:2;overflow:hidden;
+  border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);
+  background:rgba(10,16,48,.6);padding:14px 0;
+}
+.ticker-track{display:flex;gap:48px;white-space:nowrap;width:max-content;animation:ticker 26s linear infinite;font-family:var(--font-fun);font-size:17px}
+.ticker-track span{color:#cdd6ff}
+.ticker-track i{font-style:normal;color:var(--cyan);margin-right:48px}
+@keyframes ticker{to{transform:translateX(-50%)}}
+
+/* ============ 社团简介 ============ */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;max-width:1240px;margin:0 auto}
+.about-img{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--glass-border);box-shadow:var(--shadow-glow)}
+.about-img img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#101946}
+.about-img .corner{position:absolute;padding:8px 14px;background:rgba(6,10,28,.75);border:1px solid var(--glass-border);
+  border-radius:10px;font-size:12.5px;color:var(--cyan);backdrop-filter:blur(6px)}
+.about-img .corner.tl{top:14px;left:14px}
+.about-img .corner.br{bottom:14px;right:14px;color:var(--pink)}
+.about-text h3{font-family:var(--font-fun);font-size:28px;margin-bottom:18px}
+.about-text p{color:var(--muted);margin-bottom:16px;font-size:15.5px}
+.about-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.about-tags span{
+  padding:8px 16px;border-radius:999px;font-size:13.5px;
+  background:var(--glass);border:1px solid var(--glass-border);transition:.25s;
+}
+.about-tags span:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-2px)}
+
+/* ============ 学习内容卡片 ============ */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;max-width:1240px;margin:0 auto}
+.card{
+  border-radius:var(--radius);overflow:hidden;position:relative;
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+  border:1px solid var(--glass-border);
+  transition:.35s;
+}
+.card:hover{transform:translateY(-8px);border-color:rgba(155,107,255,.55);box-shadow:0 18px 44px rgba(80,80,200,.28)}
+.card-img{position:relative;aspect-ratio:16/10;overflow:hidden;background:linear-gradient(135deg,#14205c,#2a1a5e)}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:.5s}
+.card:hover .card-img img{transform:scale(1.08)}
+.card-img .lv{
+  position:absolute;top:12px;right:12px;font-size:12px;padding:4px 12px;border-radius:999px;
+  background:rgba(6,10,28,.75);border:1px solid var(--glass-border);backdrop-filter:blur(6px);
+}
+.lv.easy{color:#7dffb0}.lv.mid{color:var(--gold)}.lv.hard{color:var(--pink)}
+.card-emoji{
+  position:absolute;left:14px;bottom:-22px;width:48px;height:48px;border-radius:14px;
+  display:grid;place-items:center;font-size:24px;background:var(--grad-main);
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+}
+.card-body{padding:34px 20px 22px}
+.card-body h4{font-family:var(--font-fun);font-size:20px;margin-bottom:8px}
+.card-body p{font-size:13.5px;color:var(--muted);margin-bottom:14px;min-height:44px}
+.skill-tags{display:flex;flex-wrap:wrap;gap:6px}
+.skill-tags i{
+  font-style:normal;font-size:12px;color:#bcd0ff;
+  background:rgba(100,140,255,.12);border:1px solid rgba(100,140,255,.25);
+  padding:3px 10px;border-radius:999px;
+}
+
+/* ============ 视频课堂 ============ */
+.videos{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;max-width:1240px;margin:0 auto}
+.video-card{border-radius:var(--radius);overflow:hidden;border:1px solid var(--glass-border);
+  background:rgba(255,255,255,.05);transition:.35s}
+.video-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-glow);border-color:rgba(34,230,255,.5)}
+.video-frame{aspect-ratio:16/9;background:#0a1030;position:relative}
+.video-frame video{width:100%;height:100%;object-fit:cover;display:block}
+.video-meta{padding:16px 18px}
+.video-meta h4{font-size:16px;margin-bottom:6px;font-family:var(--font-fun)}
+.video-meta p{font-size:12.5px;color:var(--muted)}
+.video-meta .dur{display:inline-block;margin-top:8px;font-family:var(--font-tech);font-size:11px;color:var(--cyan)}
+
+/* ============ 技能大赛 ============ */
+.contest{background:linear-gradient(180deg,rgba(11,17,54,.4),rgba(11,17,54,.9));
+  border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border)}
+.contest-banner{
+  position:relative;max-width:1240px;margin:0 auto 56px;border-radius:24px;overflow:hidden;
+  border:1px solid var(--glass-border);min-height:280px;
+}
+.contest-banner img{width:100%;height:300px;object-fit:cover;background:#101946}
+.contest-banner .overlay{
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:0 7%;background:linear-gradient(90deg,rgba(6,10,28,.92) 0%,rgba(6,10,28,.55) 55%,transparent 100%);
+}
+.contest-banner h3{font-family:var(--font-fun);font-size:clamp(24px,3.4vw,38px);margin-bottom:10px}
+.contest-banner h3 span{color:var(--gold)}
+.contest-banner p{color:#c6d0f5;max-width:520px;font-size:15px}
+.contest-cols{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;max-width:1240px;margin:0 auto}
+.panel{
+  background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);padding:30px;
+  backdrop-filter:blur(8px);
+}
+.panel h4{font-family:var(--font-fun);font-size:21px;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.panel h4::before{content:"";width:5px;height:22px;border-radius:3px;background:var(--grad-main)}
+.event-chips{display:flex;flex-wrap:wrap;gap:10px}
+.event-chips span{
+  padding:10px 18px;border-radius:12px;font-size:14px;
+  background:rgba(255,255,255,.05);border:1px solid var(--glass-border);transition:.25s;
+}
+.event-chips span:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+/* 时间轴 */
+.timeline{list-style:none;position:relative;padding-left:28px;margin-top:8px}
+.timeline::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(var(--cyan),var(--purple),var(--pink))}
+.timeline li{position:relative;padding-bottom:24px}
+.timeline li:last-child{padding-bottom:0}
+.timeline li::before{
+  content:"";position:absolute;left:-26px;top:6px;width:14px;height:14px;border-radius:50%;
+  background:var(--grad-cool);box-shadow:0 0 12px rgba(34,230,255,.7);
+}
+.timeline .time{font-family:var(--font-tech);font-size:12.5px;color:var(--cyan);letter-spacing:1px}
+.timeline h5{font-size:16px;margin:2px 0}
+.timeline p{font-size:13.5px;color:var(--muted)}
+/* 荣誉榜 */
+.honors{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1240px;margin:44px auto 0}
+.honor{
+  text-align:center;padding:28px 16px;border-radius:var(--radius);
+  background:var(--glass);border:1px solid var(--glass-border);transition:.3s;
+}
+.honor:hover{transform:translateY(-6px)}
+.honor .medal{font-size:40px;display:block;margin-bottom:10px;animation:bob 3s infinite}
+.honor .num{font-family:var(--font-tech);font-size:26px;font-weight:900;color:var(--gold)}
+.honor .name{font-size:13.5px;color:var(--muted);margin-top:4px}
+
+/* ============ 资料中心 ============ */
+.res-cols{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:1240px;margin:0 auto}
+.res-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.res-item{
+  display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;
+  background:rgba(255,255,255,.045);border:1px solid var(--glass-border);transition:.25s;
+}
+.res-item:hover{border-color:rgba(34,230,255,.45);background:rgba(34,230,255,.06)}
+.res-ic{width:42px;height:42px;flex:none;border-radius:11px;display:grid;place-items:center;font-size:19px;
+  background:rgba(155,107,255,.18);border:1px solid rgba(155,107,255,.35)}
+.res-info{flex:1;min-width:0}
+.res-info h5{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.res-info small{color:var(--muted);font-size:12px}
+.res-tag{font-size:11px;padding:2px 9px;border-radius:999px;background:rgba(34,230,255,.12);
+  color:var(--cyan);border:1px solid rgba(34,230,255,.3);flex:none}
+.dl-btn{
+  flex:none;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:bold;color:#041026;
+  background:var(--grad-cool);transition:.2s;
+}
+.dl-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.del-btn{flex:none;background:none;color:#ff8fa8;font-size:18px;padding:4px 8px;border-radius:8px}
+.del-btn:hover{background:rgba(255,93,120,.12)}
+/* 上传区 */
+.upload-zone{
+  border:2px dashed rgba(155,107,255,.5);border-radius:var(--radius);
+  padding:40px 24px;text-align:center;transition:.25s;cursor:pointer;
+  background:rgba(155,107,255,.06);
+}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--cyan);background:rgba(34,230,255,.09);box-shadow:var(--shadow-glow)}
+.upload-zone .up-ic{font-size:46px;display:block;margin-bottom:12px;animation:bob 2.6s infinite}
+.upload-zone h5{font-family:var(--font-fun);font-size:18px;margin-bottom:6px}
+.upload-zone p{font-size:13px;color:var(--muted)}
+.upload-zone input{display:none}
+.up-tip{margin-top:14px;font-size:12.5px;color:var(--muted);text-align:center}
+.uploaded-list{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+
+/* ============ 留言板 ============ */
+.board-wrap{max-width:900px;margin:0 auto}
+.board-form{
+  background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);
+  padding:26px;margin-bottom:34px;backdrop-filter:blur(8px);
+}
+.board-form .row{display:flex;gap:14px;margin-bottom:14px}
+.board-form input[type=text]{
+  width:220px;flex:none;padding:12px 16px;border-radius:12px;font-size:14px;
+  background:rgba(6,10,28,.6);border:1px solid var(--glass-border);color:#fff;outline:none;transition:.2s;
+}
+.board-form input:focus,.board-form textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,230,255,.12)}
+.board-form textarea{
+  width:100%;min-height:104px;resize:vertical;padding:12px 16px;border-radius:12px;font-size:14px;
+  font-family:inherit;background:rgba(6,10,28,.6);border:1px solid var(--glass-border);color:#fff;outline:none;transition:.2s;
+}
+.quick-emoji{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+.quick-emoji button{
+  background:rgba(255,255,255,.06);border:1px solid var(--glass-border);color:#fff;
+  border-radius:999px;padding:5px 13px;font-size:13px;transition:.2s;
+}
+.quick-emoji button:hover{border-color:var(--pink);color:var(--pink)}
+.form-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.form-foot .count{font-size:12.5px;color:var(--muted)}
+.msg-list{display:flex;flex-direction:column;gap:16px}
+.msg{
+  display:flex;gap:14px;padding:20px;border-radius:var(--radius);
+  background:var(--glass);border:1px solid var(--glass-border);animation:msgIn .4s ease;
+}
+@keyframes msgIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.avatar{
+  width:46px;height:46px;flex:none;border-radius:14px;display:grid;place-items:center;
+  font-family:var(--font-fun);font-size:20px;color:#fff;
+}
+.msg-main{flex:1;min-width:0}
+.msg-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.msg-head .nm{font-weight:bold;font-size:14.5px}
+.msg-head .tm{font-size:12px;color:var(--muted)}
+.msg-head .host{font-size:11px;color:var(--gold);border:1px solid rgba(255,209,102,.4);
+  padding:1px 9px;border-radius:999px;background:rgba(255,209,102,.08)}
+.msg p.txt{font-size:14.5px;margin:6px 0 8px;word-break:break-word}
+.msg .like{background:none;color:var(--muted);font-size:13px;border-radius:999px;padding:3px 10px;transition:.2s}
+.msg .like:hover{color:var(--pink);background:rgba(255,93,184,.1)}
+.msg .like.liked{color:var(--pink)}
+.msg .like.liked i{font-style:normal}
+
+/* ============ 加入我们 ============ */
+.join{text-align:center}
+.join-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1100px;margin:0 auto 50px}
+.step{
+  background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);
+  padding:30px 18px;position:relative;transition:.3s;
+}
+.step:hover{transform:translateY(-6px);border-color:var(--purple)}
+.step .n{
+  font-family:var(--font-tech);font-size:13px;color:var(--cyan);letter-spacing:2px;
+}
+.step .ico{font-size:38px;margin:10px 0;display:block}
+.step h5{font-family:var(--font-fun);font-size:17px;margin-bottom:6px}
+.step p{font-size:13px;color:var(--muted)}
+.join-card{
+  max-width:820px;margin:0 auto;border-radius:24px;padding:46px 36px;
+  background:linear-gradient(135deg,rgba(34,230,255,.1),rgba(155,107,255,.12) 50%,rgba(255,93,184,.1));
+  border:1px solid var(--glass-border);backdrop-filter:blur(10px);
+  box-shadow:var(--shadow-glow);
+}
+.join-card h3{font-family:var(--font-fun);font-size:30px;margin-bottom:10px}
+.join-card .info{color:#c6d0f5;font-size:15px;margin-bottom:26px}
+.join-form{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.join-form input{
+  padding:13px 18px;border-radius:12px;border:1px solid var(--glass-border);
+  background:rgba(6,10,28,.65);color:#fff;font-size:14.5px;outline:none;min-width:200px;
+}
+.join-form input:focus{border-color:var(--cyan)}
+.join-form select{
+  padding:13px 18px;border-radius:12px;border:1px solid var(--glass-border);
+  background:rgba(6,10,28,.65);color:#fff;font-size:14.5px;outline:none;min-width:170px;
+}
+.join-form select option{background:#0b1136}
+
+/* ============ 页脚 ============ */
+footer{
+  position:relative;z-index:2;text-align:center;padding:46px 5vw 30px;
+  border-top:1px solid var(--glass-border);background:rgba(6,10,28,.7);
+}
+footer .flogo{font-family:var(--font-fun);font-size:22px;margin-bottom:8px}
+footer p{color:var(--muted);font-size:13px}
+footer .heart{color:var(--pink)}
+
+/* 返回顶部 */
+.to-top{
+  position:fixed;right:24px;bottom:28px;z-index:90;width:48px;height:48px;border-radius:14px;
+  background:var(--grad-main);color:#041026;font-size:20px;font-weight:bold;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:.3s;
+  box-shadow:var(--shadow-glow);
+}
+.to-top.show{opacity:1;pointer-events:auto;transform:none}
+
+/* Toast */
+.toast{
+  position:fixed;top:90px;left:50%;transform:translateX(-50%) translateY(-30px);
+  background:rgba(10,16,48,.94);border:1px solid var(--cyan);color:#fff;
+  padding:13px 26px;border-radius:999px;font-size:14.5px;z-index:300;opacity:0;
+  transition:.35s;box-shadow:var(--shadow-glow);pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* 撒花 */
+.confetti{position:fixed;top:-12px;z-index:200;pointer-events:none;font-size:16px;animation:confettiFall linear forwards}
+@keyframes confettiFall{to{transform:translateY(105vh) rotate(720deg)}}
+
+/* ============ 响应式 ============ */
+@media (max-width:1024px){
+  .cards,.videos{grid-template-columns:repeat(2,1fr)}
+  .contest-cols,.res-cols,.about-grid{grid-template-columns:1fr}
+  .join-steps{grid-template-columns:repeat(2,1fr)}
+  .honors{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:760px){
+  section{padding:70px 6vw}
+  .nav-links{
+    position:fixed;top:66px;right:16px;left:16px;flex-direction:column;gap:4px;
+    background:rgba(8,12,34,.96);border:1px solid var(--glass-border);border-radius:16px;
+    padding:12px;display:none;
+  }
+  .nav-links.open{display:flex}
+  .nav-cta{display:none}
+  .nav-toggle{display:block}
+  .hero-inner{grid-template-columns:1fr;text-align:center}
+  .hero-btns,.hero-stats{justify-content:center}
+  .hero-visual{order:-1}
+  .speech-bubble{right:0}
+  .float-chip{display:none}
+  .cards,.videos,.honors,.join-steps{grid-template-columns:1fr}
+  .board-form .row{flex-direction:column}
+  .board-form input[type=text]{width:100%}
+  .res-item{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<!-- 飘落装饰 -->
+<div id="petals"></div>
+
+<!-- ============ 导航 ============ -->
+<nav class="nav" id="nav">
+  <a class="logo" href="#home">
+    <span class="logo-icon">⚡</span>
+    <span>汇智科创社<small>HUIZHI&nbsp;TECH&nbsp;CLUB</small></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">首页</a></li>
+    <li><a href="#about">社团简介</a></li>
+    <li><a href="#learn">学习内容</a></li>
+    <li><a href="#videos">视频课堂</a></li>
+    <li><a href="#contest">技能大赛</a></li>
+    <li><a href="#resources">资料中心</a></li>
+    <li><a href="#board">留言板</a></li>
+  </ul>
+  <a class="nav-cta" href="#join">✦ 加入社团</a>
+  <button class="nav-toggle" id="navToggle">☰</button>
+</nav>
+
+<!-- ============ 首页 ============ -->
+<header class="hero" id="home">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-inner">
+    <div>
+      <span class="hero-badge">🌸 2026 秋季招新进行中 · 零基础也能成为技术大佬</span>
+      <h1>用代码点亮青春<br><span class="grad">用创意定义未来</span></h1>
+      <div class="hero-en">HUIZHI SCIENCE &amp; INNOVATION CLUB</div>
+      <p class="typing"><span id="typingText"></span><span class="cursor"></span></p>
+      <div class="hero-btns">
+        <a href="#join" class="btn btn-primary">🚀 立即加入我们</a>
+        <a href="#learn" class="btn btn-ghost">📚 探索学习内容</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num" data-count="128">0</div><div class="label">社团成员</div></div>
+        <div class="stat"><div class="num" data-count="36">0</div><div class="label">获奖荣誉</div></div>
+        <div class="stat"><div class="num" data-count="200">0</div><div class="label">学习资料</div></div>
+        <div class="stat"><div class="num" data-count="12">0</div><div class="label">兴趣方向</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="mascot-ring">
+        <div class="inner">
+          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20anime%20chibi%20student%20girl%20headphones%20smiling%20laptop%20glowing%20code%20holographic%20screens%20cyan%20purple%20neon%20sparkles%20positive%20energy%20illustration&image_size=portrait_4_3" alt="社团二次元吉祥物" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="speech-bubble">学长学姐<b>带你飞～</b></div>
+      <div class="float-chip fc-1">✨ Bug 退散！</div>
+      <div class="float-chip fc-2">🏆 技能点满</div>
+      <div class="float-chip fc-3">💗 热爱可抵岁月漫长</div>
+    </div>
+  </div>
+</header>
+
+<!-- 正能量跑马灯 -->
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack">
+    <span><i>★</i>热爱可抵岁月漫长，代码陪你闪闪发光</span>
+    <span><i>◆</i>每一个大神都曾是零基础的萌新</span>
+    <span><i>✦</i>今天多学一个技能，明天多一种可能</span>
+    <span><i>♥</i>汇智科创社，和志同道合的伙伴一起冲鸭</span>
+    <span><i>⚡</i>以梦为码，不负韶华</span>
+    <span><i>★</i>热爱可抵岁月漫长，代码陪你闪闪发光</span>
+    <span><i>◆</i>每一个大神都曾是零基础的萌新</span>
+    <span><i>✦</i>今天多学一个技能，明天多一种可能</span>
+    <span><i>♥</i>汇智科创社，和志同道合的伙伴一起冲鸭</span>
+    <span><i>⚡</i>以梦为码，不负韶华</span>
+  </div>
+</div>
+
+<!-- ============ 社团简介 ============ -->
+<section id="about">
+  <div class="sec-head reveal">
+    <span class="sec-tag">ABOUT US · 关于我们</span>
+    <h2 class="sec-title">这里是计算机爱好者的快乐星球</h2>
+    <p class="sec-desc">汇智科创社是面向全校中职学生的计算机学习型社团，汇聚热爱技术、敢想敢创的青春力量。</p>
+  </div>
+  <div class="about-grid">
+    <div class="about-img reveal">
+      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20students%20collaborating%20computer%20club%20room%20laptops%20laughing%20tech%20posters%20warm%20sunlight%20cozy&image_size=landscape_4_3" alt="社团活动场景" onerror="this.style.display='none'">
+      <span class="corner tl">📍 警示教育基地 308 机房</span>
+      <span class="corner br">🕘 每周二 17:20 - 18:00</span>
+    </div>
+    <div class="about-text reveal">
+      <h3>🌟 汇智慧 · 创未来</h3>
+      <p>「汇智科创社」成立于校园数字化浪潮之中，是一个聚焦<b style="color:var(--cyan)">编程开发、数字媒体、网络技术与人工智能</b>的学生社团。我们相信：每一行代码、每一帧画面、每一次调试，都是青春成长的印记。</p>
+      <p>社团采用「老带新 · 项目驱动 · 竞赛培优」模式，零基础萌新可以从开关机、打字、Word 排版学起；有基础的同学则能参与真实项目、冲刺省市及全国职业院校技能大赛。</p>
+      <p>在这里，没有孤单啃书的深夜，只有并肩作战的伙伴——<b style="color:var(--pink)">一起掉坑，一起变强，一起闪闪发光！</b></p>
+      <div class="about-tags">
+        <span>💚 零基础友好</span><span>🛠 项目实战</span><span>🎓 学长带飞</span>
+        <span>🏆 竞赛培优</span><span>🎮 快乐学习</span><span>🤝 志同道合</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 学习内容 ============ -->
+<section id="learn">
+  <div class="sec-head reveal">
+    <span class="sec-tag">LEARN · 学习内容</span>
+    <h2 class="sec-title">六大技能树，等你来点亮</h2>
+    <p class="sec-desc">从入门到实战，学长学姐手把手教学，每周线下集训 + 线上答疑，让你的技能条蹭蹭往上涨！</p>
+  </div>
+  <div class="cards">
+    <div class="card reveal">
+      <div class="card-img">
+        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20style%20programming%20code%20on%20computer%20monitor%20mechanical%20keyboard%20cozy%20desk%20cyan%20purple%20neon%20light&image_size=landscape_4_3" alt="程序设计" loading="lazy" onerror="this.style.display='none'">
+        <span class="lv easy">入门友好</span><span class="card-emoji">💻</span>
+      </div>
+      <div class="card-body">
+        <h4>程序设计入门</h4>
+        <p>用 Python 写出第一个小游戏，用 HTML/CSS 做出个人主页，感受创造的快乐。</p>
+        <div class="skill-tags"><i>Python</i><i>C 语言</i><i>HTML+CSS</i><i>JavaScript</i></div>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-img">
+        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20style%20graphic%20designer%20drawing%20tablet%20colorful%20design%20on%20screen%20creative%20desk%20pink%20purple%20neon&image_size=landscape_4_3" alt="平面设计" loading="lazy" onerror="this.style.display='none'">
+        <span class="lv easy">入门友好</span><span class="card-emoji">🎨</span>
+      </div>
+      <div class="card-body">
+        <h4>平面设计创意</h4>
+        <p>海报、Logo、表情包、二次元头像……把脑洞变成作品，承包校园所有宣传海报。</p>
+        <div class="skill-tags"><i>Photoshop</i><i>Illustrator</i><i>配色排版</i></div>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-img">
+        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20style%20video%20editing%20workstation%20timeline%20footage%20on%20monitor%20film%20strips%20blue%20neon%20cinematic&image_size=landscape_4_3" alt="视频剪辑" loading="lazy" onerror="this.style.display='none'">
+        <span class="lv mid">进阶提升</span><span class="card-emoji">🎬</span>
+      </div>
+      <div class="card-body">
+        <h4>短视频与特效</h4>
+        <p>校园 Vlog、混剪、片头动画、MG 动画，下一个百万剪辑师就是你。</p>
+        <div class="skill-tags"><i>剪映</i><i>Premiere</i><i>AE 特效</i></div>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-img">
+        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20style%20cyber%20security%20network%20glowing%20nodes%20shield%20icon%20laptop%20dark%20blue%20cyan%20digital%20world&image_size=landscape_4_3" alt="网络技术" loading="lazy" onerror="this.style.display='none'">
+        <span class="lv mid">进阶提升</span><span class="card-emoji">🛰</span>
+      </div>
+      <div class="card-body">
+        <h4>网络技术与安全</h4>
+        <p>动手组建校园局域网，认识路由器与服务器，做守护网络世界的白帽子。</p>
+        <div class="skill-tags"><i>网络搭建</i><i>系统运维</i><i>安全基础</i></div>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-img">
+        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20style%20modern%20office%20desk%20spreadsheet%20presentation%20on%20screen%20coffee%20plant%20bright%20warm%20colorful&image_size=landscape_4_3" alt="办公自动化" loading="lazy" onerror="this.style.display='none'">
+        <span class="lv easy">入门友好</span><span class="card-emoji">📊</span>
+      </div>
+      <div class="card-body">
+        <h4>办公软件高手</h4>
+        <p>Word 长文档排版、Excel 函数与数据透视表、炫酷 PPT 动画，职场技能提前点满。</p>
+        <div class="skill-tags"><i>Word</i><i>Excel</i><i>PPT</i><i>1+X 证书</i></div>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-img">
+        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20style%20electronics%20workshop%20circuit%20board%20robot%20arm%20microchip%20students%20hands%20purple%20cyan%20neon&image_size=landscape_4_3" alt="硬件与AI" loading="lazy" onerror="this.style.display='none'">
+        <span class="lv hard">挑战赛道</span><span class="card-emoji">🤖</span>
+      </div>
+      <div class="card-body">
+        <h4>硬件与人工智能</h4>
+        <p>装机、单片机点亮流水灯、训练 AI 识别模型、玩转物联网，触摸未来科技。</p>
+        <div class="skill-tags"><i>电脑装机</i><i>单片机</i><i>AI 应用</i><i>物联网</i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 视频课堂 ============ -->
+<section id="videos">
+  <div class="sec-head reveal">
+    <span class="sec-tag">VIDEOS · 视频课堂</span>
+    <h2 class="sec-title">学长学姐小课堂，开课啦</h2>
+    <p class="sec-desc">社团自制微课视频，碎片时间随时充电。（以下为示例播放器，可替换为社团真实教学视频）</p>
+  </div>
+  <div class="videos">
+    <div class="video-card reveal">
+      <div class="video-frame">
+        <video controls preload="none" poster="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20teacher%20explaining%20programming%20at%20whiteboard%20computer%20classroom%20students%20energetic%20neon%20highlights&image_size=landscape_16_9">
+          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="video-meta">
+        <h4>📺 Python 零基础第一课：和计算机对话</h4>
+        <p>从 print("Hello") 开始，写下人生第一行代码，零基础必看！</p>
+        <span class="dur">▶ 12:30 · 入门篇</span>
+      </div>
+    </div>
+    <div class="video-card reveal">
+      <div class="video-frame">
+        <video controls preload="none" poster="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20style%20photo%20editing%20tutorial%20screen%20layers%20color%20palette%20creative%20purple%20pink%20glow&image_size=landscape_16_9">
+          <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="video-meta">
+        <h4>🎨 PS 海报实战：科技节海报 30 分钟速成</h4>
+        <p>图层、蒙版、字体特效一条龙，看完就能交作业。</p>
+        <span class="dur">▶ 18:05 · 设计篇</span>
+      </div>
+    </div>
+    <div class="video-card reveal">
+      <div class="video-frame">
+        <video controls preload="none" poster="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20vocational%20skills%20competition%20students%20at%20computers%20big%20screen%20spotlights%20trophy%20stage&image_size=landscape_16_9">
+          <source src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="video-meta">
+        <h4>🏆 省赛获奖学长分享：我的备赛通关路线图</h4>
+        <p>时间规划、刷题策略、心态管理，干货满满不看亏大了。</p>
+        <span class="dur">▶ 25:40 · 竞赛篇</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 技能大赛 ============ -->
+<section class="contest" id="contest">
+  <div class="sec-head reveal">
+    <span class="sec-tag">CONTEST · 技能大赛</span>
+    <h2 class="sec-title">以赛促学，登上属于你的领奖台</h2>
+    <p class="sec-desc">职业院校技能大赛是中职学子证明实力的最高舞台，社团全程提供选拔赛、培优班与真题资源。</p>
+  </div>
+  <div class="contest-banner reveal">
+    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=grand%20anime%20style%20skills%20competition%20stage%20glowing%20trophy%20computers%20confetti%20cyan%20magenta%20spotlights%20youth%20energy&image_size=landscape_16_9" alt="技能大赛舞台" onerror="this.style.display='none'">
+    <div class="overlay">
+      <h3>全国职业院校<span>技能大赛</span>备赛专区</h3>
+      <p>校赛 → 市赛 → 省赛 → 国赛，四级闯关体系。社团累计斩获省级以上奖项 30+ 项，下一个站上领奖台的，就是你！</p>
+    </div>
+  </div>
+  <div class="contest-cols">
+    <div class="panel reveal">
+      <h4>🎯 重点赛项方向</h4>
+      <div class="event-chips">
+        <span>🌐 网络建设与运维</span>
+        <span>💻 软件与信息服务</span>
+        <span>🎨 数字艺术设计</span>
+        <span>🎬 短视频制作</span>
+        <span>🛒 电子商务技能</span>
+        <span>📡 物联网技术应用</span>
+        <span>☁️ 云计算应用</span>
+        <span>🧠 人工智能应用</span>
+      </div>
+      <h4 style="margin-top:30px">📋 报名条件</h4>
+      <p style="color:var(--muted);font-size:14px">在校中职学生均可报名，专业不限、基础不限。社团将组织统一选拔测试，按方向编入备赛小组，配备指导老师与往届获奖学长结对带训。</p>
+    </div>
+    <div class="panel reveal">
+      <h4>🗓 年度备赛时间轴</h4>
+      <ul class="timeline">
+        <li>
+          <div class="time">3 月 · MARCH</div>
+          <h5>校内选拔 &amp; 萌新入营</h5>
+          <p>宣讲会 + 摸底小测，双向选择进入备赛预备队。</p>
+        </li>
+        <li>
+          <div class="time">4 - 5 月 · SPRING</div>
+          <h5>市级初赛冲刺</h5>
+          <p>每周两次模拟赛，真题精练 + 一对一讲评。</p>
+        </li>
+        <li>
+          <div class="time">6 - 9 月 · SUMMER</div>
+          <h5>省赛集训营</h5>
+          <p>暑期封闭集训，企业工程师进校园实战授课。</p>
+        </li>
+        <li>
+          <div class="time">10 - 11 月 · AUTUMN</div>
+          <h5>国赛舞台 · 顶峰相见</h5>
+          <p>省队选拔，代表学校冲击国家级荣誉！</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="honors reveal">
+    <div class="honor"><span class="medal">🥇</span><div class="num" data-count="6">0</div><div class="name">国家级奖项</div></div>
+    <div class="honor"><span class="medal">🥈</span><div class="num" data-count="18">0</div><div class="name">省级奖项</div></div>
+    <div class="honor"><span class="medal">🥉</span><div class="num" data-count="42">0</div><div class="name">市 / 校级奖项</div></div>
+  </div>
+  <div style="text-align:center;margin-top:40px" class="reveal">
+    <a href="#resources" class="btn btn-primary">📥 领取备赛真题与资料</a>
+  </div>
+</section>
+
+<!-- ============ 资料中心 ============ -->
+<section id="resources">
+  <div class="sec-head reveal">
+    <span class="sec-tag">FILES · 资料中心</span>
+    <h2 class="sec-title">上传 &amp; 下载，共享知识库</h2>
+    <p class="sec-desc">社团资料全员共建：讲义、真题、素材包自由下载，也欢迎上传你的学习笔记与大家分享！</p>
+  </div>
+  <div class="res-cols">
+    <!-- 下载 -->
+    <div class="panel reveal">
+      <h4>📦 官方精选资料（点击下载）</h4>
+      <ul class="res-list" id="officialRes"><!-- JS 渲染 --></ul>
+    </div>
+    <!-- 上传 -->
+    <div class="panel reveal">
+      <h4>📤 社员上传区</h4>
+      <label class="upload-zone" id="uploadZone">
+        <span class="up-ic">☁️</span>
+        <h5>点击选择文件 或 拖拽到此处</h5>
+        <p>笔记 / 代码 / 素材 / 作品都可以，单个文件建议 1MB 以内</p>
+        <input type="file" id="fileInput" multiple>
+      </label>
+      <p class="up-tip">🔒 演示数据保存在本浏览器中（localStorage），清空浏览器数据后会重置</p>
+      <div class="uploaded-list" id="uploadedList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 留言板 ============ -->
+<section id="board">
+  <div class="sec-head reveal">
+    <span class="sec-tag">MESSAGE · 留言板</span>
+    <h2 class="sec-title">弹幕刷起来，给未来的自己打个气</h2>
+    <p class="sec-desc">报名咨询、学习打卡、想说的话……都可以留在这里，每条留言都会被温柔以待 💗</p>
+  </div>
+  <div class="board-wrap">
+    <form class="board-form reveal" id="msgForm">
+      <div class="row">
+        <input type="text" id="msgName" maxlength="12" placeholder="你的昵称（如：代码萌新小周）">
+        <input type="text" id="msgContact" maxlength="30" placeholder="微信（选填，仅社团可见）" style="flex:1">
+      </div>
+      <textarea id="msgText" maxlength="200" placeholder="写下你想说的话，例如：零基础想学编程，学长带我一个！"></textarea>
+      <div class="quick-emoji" id="quickEmoji">
+        <button type="button">💪 一起冲鸭</button>
+        <button type="button">🔥 打卡学习</button>
+        <button type="button">🌟 想报竞赛</button>
+        <button type="button">🐛 Bug退散</button>
+        <button type="button">💗 为社团打call</button>
+      </div>
+      <div class="form-foot">
+        <span class="count"><span id="msgCount">0</span>/200</span>
+        <button type="submit" class="btn btn-primary" style="padding:10px 26px">✨ 发布留言</button>
+      </div>
+    </form>
+    <div class="msg-list" id="msgList"></div>
+  </div>
+</section>
+
+<!-- ============ 加入我们 ============ -->
+<section class="join" id="join">
+  <div class="sec-head reveal">
+    <span class="sec-tag">JOIN US · 加入我们</span>
+    <h2 class="sec-title">四步上车，开启升级之旅</h2>
+  </div>
+  <div class="join-steps">
+    <div class="step reveal"><span class="n">STEP 01</span><span class="ico">📝</span><h5>填表报名</h5><p>下方表单或到社团摊位登记</p></div>
+    <div class="step reveal"><span class="n">STEP 02</span><span class="ico">🎉</span><h5>萌新见面会</h5><p>认识伙伴，领取新人礼包</p></div>
+    <div class="step reveal"><span class="n">STEP 03</span><span class="ico">🧭</span><h5>选择方向</h5><p>六大技能树自由选择</p></div>
+    <div class="step reveal"><span class="n">STEP 04</span><span class="ico">🚀</span><h5>开始升级</h5><p>集训实战 + 竞赛冲刺</p></div>
+  </div>
+  <div class="join-card reveal">
+    <h3>🌟 现在报名，和我们一起闪闪发光</h3>
+    <p class="info">🕡 活动时间：每周二下午 17:20 - 18:00 ｜ 📍 地点：警示教育基地 308 机房 ｜ 💬 微信招新群：待更新</p>
+    <form class="join-form" id="joinForm">
+      <input type="text" id="joinName" maxlength="12" placeholder="你的姓名 / 昵称" required>
+      <select id="joinDir">
+        <option>程序设计方向</option>
+        <option>平面设计方向</option>
+        <option>视频剪辑方向</option>
+        <option>网络技术方向</option>
+        <option>办公软件方向</option>
+        <option>硬件 / AI 方向</option>
+        <option>我全都要看看！</option>
+      </select>
+      <button class="btn btn-primary" type="submit">🚀 我要报名</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="flogo">⚡ 汇智科创社</div>
+  <p>汇智慧 · 创未来 ｜ 用热爱编译青春，用代码连接世界</p>
+  <p style="margin-top:8px">© 2026 汇智科创社 HUIZHI TECH &amp; INNOVATION CLUB · Made with <span class="heart">♥</span> by 社团技术部</p>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="返回顶部">↑</button>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 导航 & 滚动 ================= */
+const nav=document.getElementById('nav');
+const toTop=document.getElementById('toTop');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',window.scrollY>40);
+  toTop.classList.toggle('show',window.scrollY>600);
+});
+toTop.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+document.getElementById('navToggle').onclick=()=>document.getElementById('navLinks').classList.toggle('open');
+document.querySelectorAll('#navLinks a').forEach(a=>a.onclick=()=>document.getElementById('navLinks').classList.remove('open'));
+
+/* ================= Toast ================= */
+const toastEl=document.getElementById('toast');let toastTimer;
+function toast(msg){
+  toastEl.textContent=msg;toastEl.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove('show'),2400);
+}
+
+/* ================= Hero 粒子 Canvas ================= */
+const canvas=document.getElementById('heroCanvas'),ctx=canvas.getContext('2d');
+let W,H,particles=[];
+function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
+window.addEventListener('resize',resize);resize();
+const COLORS=['34,230,255','155,107,255','255,93,184','120,160,255'];
+function initParticles(){
+  particles=[];
+  const n=Math.min(80,Math.floor(W/16));
+  for(let i=0;i<n;i++){
+    particles.push({
+      x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.45,vy:(Math.random()-.5)*.45,
+      r:Math.random()*2+1,c:COLORS[Math.floor(Math.random()*COLORS.length)]
+    });
+  }
+}
+initParticles();
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(const p of particles){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;
+    if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${p.c},.8)`;ctx.fill();
+  }
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const a=particles[i],b=particles[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<120){
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(120,160,255,${.14*(1-d/120)})`;ctx.lineWidth=1;ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* ================= 飘落花瓣 / 星星 ================= */
+const petalBox=document.getElementById('petals');
+const PETALS=['🌸','💮','✦','✧','⭐','💫'];
+function spawnPetal(){
+  const s=document.createElement('span');
+  s.className='petal';
+  s.textContent=PETALS[Math.floor(Math.random()*PETALS.length)];
+  s.style.left=Math.random()*100+'vw';
+  s.style.animationDuration=(8+Math.random()*9)+'s';
+  s.style.fontSize=(12+Math.random()*10)+'px';
+  s.style.opacity=.45+Math.random()*.4;
+  petalBox.appendChild(s);
+  setTimeout(()=>s.remove(),17000);
+}
+setInterval(spawnPetal,900);
+for(let i=0;i<8;i++)setTimeout(spawnPetal,i*300);
+
+/* ================= 打字机 ================= */
+const lines=['用代码点亮青春，用创意定义未来！✨','在这里，每一行代码都是热爱的形状 💻','Bug 退散，技能点满，大家一起冲鸭！🚀'];
+const typingEl=document.getElementById('typingText');
+let li=0,ci=0,deleting=false;
+function type(){
+  const word=lines[li];
+  typingEl.textContent=word.slice(0,ci);
+  if(!deleting&&ci<word.length){ci++;setTimeout(type,80);}
+  else if(!deleting){deleting=true;setTimeout(type,1800);}
+  else if(ci>0){ci--;setTimeout(type,35);}
+  else{deleting=false;li=(li+1)%lines.length;setTimeout(type,400);}
+}
+type();
+
+/* ================= 滚动显现 ================= */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ================= 数字滚动 ================= */
+const counterIO=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target,target=+el.dataset.count;let cur=0;
+    const step=Math.max(1,Math.ceil(target/55));
+    const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t);}el.textContent=cur;},26);
+    counterIO.unobserve(el);
+  });
+},{threshold:.6});
+document.querySelectorAll('[data-count]').forEach(el=>counterIO.observe(el));
+
+/* ================= 官方资料（下载内容由前端生成） ================= */
+const RESOURCES=[
+  {ic:'📘',tag:'备赛',name:'2026 技能大赛备赛手册.md',size:'4 KB',type:'md',
+   content:'# 2026 技能大赛备赛手册（汇智科创社版）\n\n## 一、备赛节奏\n- 3月：校内选拔，建立知识图谱\n- 4-5月：市赛真题精练，每周两测\n- 6-9月：暑期集训，模块化突破\n- 10-11月：国赛冲刺，模拟实战\n\n## 二、通用建议\n1. 建立错题本，真题至少刷三遍\n2. 组队训练，分工明确，互相讲评\n3. 规范操作流程，重视文档与命名\n4. 调整作息，保持手感与心态\n\n加油！下一个领奖台上的人就是你！🏆\n—— 汇智科创社 竞赛培优组'},
+  {ic:'🐍',tag:'编程',name:'Python 入门学习讲义.md',size:'6 KB',type:'md',
+   content:'# Python 入门讲义\n\n## 环境搭建\n安装 Python 3.x → 打开 IDLE / VS Code\n\n## 基础语法\n```python\nprint("Hello, 汇智科创社!")\nfor i in range(5):\n    print("我能行 x", i+1)\n```\n\n## 练习清单\n1. 输入两个数，输出它们的和\n2. 判断一个数是不是偶数\n3. 猜数字小游戏\n4. 用 turtle 画一颗五角星\n\n坚持每天 30 分钟，一个月后你会感谢现在的自己！✨'},
+  {ic:'🎨',tag:'设计',name:'PS 快捷键大全.txt',size:'2 KB',type:'txt',
+   content:'Photoshop 常用快捷键速查表（Windows）\n\n新建 Ctrl+N    保存 Ctrl+S    自由变换 Ctrl+T\n取消选区 Ctrl+D    反选 Ctrl+Shift+I    填充 Shift+F5\n画笔 B    橡皮擦 E    文字 T    移动 V\n钢笔 P    套索 L    快速选择 W    吸管 I\n复制图层 Ctrl+J    合并图层 Ctrl+E    撤销 Ctrl+Z（多步 Ctrl+Alt+Z）\n色阶 Ctrl+L    曲线 Ctrl+M    色相饱和度 Ctrl+U\n\n小贴士：先记 10 个最高频的，边做边记，效率翻倍！—— 设计部'},
+  {ic:'📝',tag:'竞赛',name:'往届省赛真题精选（节选）.md',size:'5 KB',type:'md',
+   content:'# 往届省赛真题精选（节选练习版）\n\n## 网络建设与运维\n- 按拓扑完成 VLAN 划分与 Trunk 配置\n- 配置 DHCP 中继与静态路由\n- 服务器部署 Web + FTP 服务并抓包验证\n\n## 数字艺术设计\n- 以「青春筑梦」为主题设计校园文化节主视觉\n- 要求：主海报 1 张 + 延展物料 2 件，附设计说明\n\n## 软件与信息服务\n- 完成学生成绩管理系统的增删改查模块\n- 输入校验、异常处理、界面友好度均计分\n\n（完整版请在社团活动日到警示教育基地 308 机房领取～）'},
+  {ic:'📊',tag:'办公',name:'Excel 常用函数清单.txt',size:'2 KB',type:'txt',
+   content:'Excel 高频函数清单\n\nSUM 求和　　AVERAGE 平均值　　MAX/MIN 最大最小值\nCOUNT 计数　　COUNTIF 条件计数　　SUMIF 条件求和\nIF 条件判断　　AND/OR 逻辑组合\nVLOOKUP 纵向查找　　XLOOKUP 新版查找\nTEXT 文本格式化　　LEFT/RIGHT/MID 取字符\nTODAY/NOW 日期　　DATEDIF 计算间隔\nRANK 排名　　ROUND 四舍五入\n\n1+X 办公软件证书考点全覆盖，练熟就是职场高手！'},
+  {ic:'🎯',tag:'模板',name:'社团作品提交说明模板.txt',size:'1 KB',type:'txt',
+   content:'社团作品提交规范\n\n文件命名：方向_作品名_昵称_日期\n示例：编程_猜数字游戏_小周_20261008\n\n提交内容：\n1. 作品源文件 / 工程包\n2. 作品截图或演示视频（30秒内）\n3. 一句话作品介绍\n\n提交方式：上传至资料中心「社员上传区」或群文件\n优秀作品将在社团公众号展出示，并计入年度评优积分 ⭐'}
+];
+function fmtName(n){return n;}
+function downloadFile(item){
+  const blob=new Blob([item.content],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=item.name;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+  toast('📥 开始下载：'+item.name);
+}
+const officialEl=document.getElementById('officialRes');
+RESOURCES.forEach(r=>{
+  const li=document.createElement('li');li.className='res-item';
+  li.innerHTML=`<span class="res-ic">${r.ic}</span>
+    <div class="res-info"><h5>${r.name}</h5><small>${r.size} · 社团整理</small></div>
+    <span class="res-tag">${r.tag}</span>`;
+  const btn=document.createElement('button');btn.className='dl-btn';btn.textContent='下载';
+  btn.onclick=()=>downloadFile(r);
+  li.appendChild(btn);
+  officialEl.appendChild(li);
+});
+
+/* ================= 社员上传（localStorage） ================= */
+const UP_KEY='hz_uploads_v1';
+let uploads=[];
+try{uploads=JSON.parse(localStorage.getItem(UP_KEY))||[];}catch(e){uploads=[];}
+const MAX_TOTAL=1500000; // 约 1.5MB
+const upZone=document.getElementById('uploadZone');
+const fileInput=document.getElementById('fileInput');
+const upList=document.getElementById('uploadedList');
+
+function saveUploads(){
+  try{localStorage.setItem(UP_KEY,JSON.stringify(uploads));}
+  catch(e){toast('⚠️ 浏览器存储空间不足，请删除部分文件');}
+}
+function totalSize(){return uploads.reduce((s,f)=>s+f.size,0);}
+function iconOf(name){
+  const ext=(name.split('.').pop()||'').toLowerCase();
+  if(['jpg','png','gif','jpeg','webp'].includes(ext))return'🖼';
+  if(['mp4','mov','avi','mkv'].includes(ext))return'🎬';
+  if(['zip','rar','7z'].includes(ext))return'🗜';
+  if(['doc','docx','pdf','txt','md'].includes(ext))return'📄';
+  if(['py','js','html','css','c','cpp','java'].includes(ext))return'🧩';
+  return'📎';
+}
+function renderUploads(){
+  upList.innerHTML='';
+  if(!uploads.length){
+    upList.innerHTML='<p style="color:var(--muted);font-size:13px;text-align:center;padding:8px">还没有社员上传资料，快来抢沙发 🛋</p>';
+    return;
+  }
+  uploads.forEach((f,idx)=>{
+    const li=document.createElement('div');li.className='res-item';
+    li.innerHTML=`<span class="res-ic">${iconOf(f.name)}</span>
+      <div class="res-info"><h5>${f.name}</h5><small>${(f.size/1024).toFixed(1)} KB · ${f.date}</small></div>
+      <span class="res-tag">社员</span>`;
+    const dl=document.createElement('button');dl.className='dl-btn';dl.textContent='下载';
+    dl.onclick=()=>{
+      const a=document.createElement('a');
+      a.href=f.data;a.download=f.name;
+      document.body.appendChild(a);a.click();a.remove();
+    };
+    const del=document.createElement('button');del.className='del-btn';del.textContent='🗑';del.title='删除';
+    del.onclick=()=>{uploads.splice(idx,1);saveUploads();renderUploads();toast('已删除文件');};
+    li.append(dl,del);upList.appendChild(li);
+  });
+}
+function handleFiles(files){
+  [...files].forEach(file=>{
+    if(totalSize()+file.size>MAX_TOTAL){
+      toast('⚠️ 演示空间有限（约1.5MB），'+file.name+' 未上传');return;
+    }
+    const reader=new FileReader();
+    reader.onload=()=>{
+      uploads.unshift({name:file.name,size:file.size,data:reader.result,
+        date:new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})});
+      saveUploads();renderUploads();
+      toast('🎉 上传成功：'+file.name);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+fileInput.onchange=e=>handleFiles(e.target.files);
+['dragenter','dragover'].forEach(ev=>upZone.addEventListener(ev,e=>{e.preventDefault();upZone.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>upZone.addEventListener(ev,e=>{e.preventDefault();upZone.classList.remove('drag');}));
+upZone.addEventListener('drop',e=>handleFiles(e.dataTransfer.files));
+renderUploads();
+
+/* ================= 留言板（localStorage） ================= */
+const MSG_KEY='hz_messages_v1';
+const seedMsgs=[
+  {name:'社团小助手',host:true,text:'欢迎大家来留言！报名问题、学习打卡、技术交流都可以发在这里，我们会逐条回复～ 💪',likes:28,time:'2026-09-01 09:00'},
+  {name:'去年的萌新阿泽',text:'零基础进社团，一年后拿了省赛二等奖，感谢汇智！学弟学妹们勇敢报名，冲就完事了 🏆',likes:42,time:'2026-09-05 20:14'},
+  {name:'设计部喵酱',text:'想学 PS / 二次元头像的举个爪！每周二设计组在警示教育基地 308 机房等你们，零基础包教包会 🎨✨',likes:35,time:'2026-09-12 17:30'}
+];
+let msgs=[];
+try{msgs=JSON.parse(localStorage.getItem(MSG_KEY));if(!Array.isArray(msgs)||!msgs.length)msgs=seedMsgs;}catch(e){msgs=seedMsgs;}
+const msgList=document.getElementById('msgList');
+const AVATAR_COLORS=['#22e6ff','#9b6bff','#ff5db8','#4f8dff','#ffd166','#5be49b','#ff8a5d'];
+function saveMsgs(){localStorage.setItem(MSG_KEY,JSON.stringify(msgs));}
+function nowStr(){
+  const d=new Date(),p=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function renderMsgs(){
+  msgList.innerHTML='';
+  msgs.forEach((m,idx)=>{
+    let hash=0;for(const ch of m.name)hash=(hash*31+ch.charCodeAt(0))>>>0;
+    const color=AVATAR_COLORS[hash%AVATAR_COLORS.length];
+    const div=document.createElement('div');div.className='msg';
+    div.innerHTML=`
+      <div class="avatar" style="background:linear-gradient(135deg,${color},#5b3fd6)">${m.name[0]||'同'}</div>
+      <div class="msg-main">
+        <div class="msg-head">
+          <span class="nm">${m.name.replace(/[<>]/g,'')}</span>
+          ${m.host?'<span class="host">官方</span>':''}
+          <span class="tm">${m.time}</span>
+        </div>
+        <p class="txt"></p>
+        <button class="like ${m.liked?'liked':''}"><i>${m.liked?'❤️':'🤍'}</i> <span>${m.likes}</span></button>
+      </div>`;
+    div.querySelector('.txt').textContent=m.text;
+    div.querySelector('.like').onclick=function(){
+      m.liked=!m.liked;m.likes+=m.liked?1:-1;saveMsgs();renderMsgs();
+    };
+    msgList.appendChild(div);
+  });
+}
+renderMsgs();
+
+const msgText=document.getElementById('msgText');
+msgText.addEventListener('input',()=>document.getElementById('msgCount').textContent=msgText.value.length);
+document.querySelectorAll('#quickEmoji button').forEach(b=>
+  b.onclick=()=>{msgText.value+=(msgText.value?' ':'')+b.textContent;msgText.dispatchEvent(new Event('input'));msgText.focus();});
+document.getElementById('msgForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=document.getElementById('msgName').value.trim();
+  const text=msgText.value.trim();
+  if(!name){toast('先留下你的昵称吧～');return;}
+  if(!text){toast('留言内容不能为空哦～');return;}
+  msgs.unshift({name,text,likes:0,liked:false,time:nowStr()});
+  saveMsgs();renderMsgs();
+  msgText.value='';document.getElementById('msgCount').textContent='0';
+  document.getElementById('msgContact').value='';
+  toast('💌 留言发布成功，谢谢你的分享！');
+});
+
+/* ================= 报名 & 撒花 ================= */
+const CONFETTI=['🎉','✨','⭐','🌸','💙','💜','💗','⚡','🌟'];
+function confettiBurst(n=36){
+  for(let i=0;i<n;i++){
+    const s=document.createElement('span');
+    s.className='confetti';s.textContent=CONFETTI[Math.floor(Math.random()*CONFETTI.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.animationDuration=(2.2+Math.random()*2.2)+'s';
+    s.style.fontSize=(13+Math.random()*16)+'px';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),4600);
+  }
+}
+document.getElementById('joinForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=document.getElementById('joinName').value.trim();
+  const dir=document.getElementById('joinDir').value;
+  if(!name)return;
+  confettiBurst();
+  toast(`🎊 ${name}，报名成功！方向：${dir}，见面会见～`);
+  e.target.reset();
+});
+</script>
+</body>
+</html>
